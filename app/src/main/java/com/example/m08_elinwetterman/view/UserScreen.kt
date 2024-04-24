@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -13,6 +14,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Save
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -45,28 +47,24 @@ import com.example.m08_elinwetterman.viewmodel.MapViewModel
  * @param mapViewModel El ViewModel que contiene la lógica y los datos relacionados con el perfil del usuario.
  */
 
+
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun ProfileScreen(navController: NavController, mapViewModel: MapViewModel) {
-    // Observa el estado del imageUrlForUser LiveData para obtener la URL de la imagen del usuario.
+fun ProfileScreen(
+    navController: NavController,
+    mapViewModel: MapViewModel
+) {
+
     val imageUrl: String? by mapViewModel.imageUrlForUser.observeAsState(null)
-    // Observa el estado del loggedUser LiveData para obtener el nombre de usuario.
     val loggedUser: String by mapViewModel.loggedUser.observeAsState("")
     val userName = loggedUser
-    // Observa el estado del nombreUsuario LiveData para obtener el nombre de usuario personalizado.
     val nombre: String by mapViewModel.nombreUsuario.observeAsState(initial = "")
-    // Obtiene la imagen de perfil del usuario.
     mapViewModel.getProfileImageUrlForUser()
-
-    // Si el usuario no está conectado, cierra la sesión y redirige a la pantalla de inicio de sesión.
     if (!mapViewModel.userLogged()) {
         mapViewModel.signOut(context = LocalContext.current, navController)
     }
-
-    // Observa el estado isLoadingMarkers LiveData para mostrar un indicador de progreso mientras se cargan los datos.
     val isLoading: Boolean by mapViewModel.isLoadingMarkers.observeAsState(initial = false)
 
-    // Si isLoading es true, muestra un indicador de progreso.
     if (!isLoading) {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -79,14 +77,19 @@ fun ProfileScreen(navController: NavController, mapViewModel: MapViewModel) {
             )
         }
     } else {
-        // Si isLoading es false, muestra la pantalla de perfil.
         MyDrawer(navController = navController, mapViewModel = mapViewModel) {
-            // Si showTakePhotoScreen es true, muestra la pantalla para tomar una foto de perfil.
             if (mapViewModel.showTakePhotoScreen) {
-                // Lógica para mostrar la pantalla para tomar una foto de perfil.
-                // Omitido por simplicidad.
+                Box(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    TakePhotoScreen(
+                        mapViewModel = mapViewModel
+                    ) { photo ->
+                        mapViewModel.modificarEditedProfilePhoto(photo)
+                        mapViewModel.modificarShowTakePhotoScreen(false)
+                    }
+                }
             } else {
-                // Muestra la información del usuario y la foto de perfil.
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.fillMaxSize()
@@ -107,7 +110,6 @@ fun ProfileScreen(navController: NavController, mapViewModel: MapViewModel) {
                             .size(200.dp)
                             .clip(CircleShape)
                     ) {
-                        // Muestra la foto de perfil del usuario.
                         if (mapViewModel.editedProfilePhoto != null) {
                             Image(
                                 bitmap = mapViewModel.editedProfilePhoto!!.asImageBitmap(),
@@ -126,13 +128,12 @@ fun ProfileScreen(navController: NavController, mapViewModel: MapViewModel) {
                             Image(
                                 painter = painterResource(id = R.drawable.mascota),
                                 contentDescription = "Profile",
-                                modifier = Modifier.size(400.dp)
-                                //contentScale = ContentScale.Crop,
+                                modifier = Modifier.fillMaxSize(),
+                                contentScale = ContentScale.Crop,
                             )
                         }
                     }
 
-                    // Botones para cambiar y guardar la foto de perfil.
                     Row {
                         OutlinedButton(
                             onClick = {
@@ -178,3 +179,4 @@ fun ProfileScreen(navController: NavController, mapViewModel: MapViewModel) {
         }
     }
 }
+
