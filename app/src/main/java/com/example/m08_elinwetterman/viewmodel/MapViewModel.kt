@@ -58,6 +58,14 @@ class MapViewModel : ViewModel() {
         editedTitle = title
     }
 
+    fun modificarApellidoState(value: String) {
+        _apellidoState.value = value
+    }
+
+    fun modificarCiudadState(value: String) {
+        _ciudadState.value = value
+    }
+
     fun modificarEditedSnippet(snippet: String) {
         editedSnippet = snippet
     }
