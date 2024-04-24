@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "796760934988",
+    "project_id": "neat-fin-421110",
+    "storage_bucket": "neat-fin-421110.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:796760934988:android:873d9e638cbb12ffc902e9",
+        "android_client_info": {
+          "package_name": "com.example.m08_elinwetterman"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLg92jL1-EafxHG3VpOsEM6Aoh5U11ANc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
